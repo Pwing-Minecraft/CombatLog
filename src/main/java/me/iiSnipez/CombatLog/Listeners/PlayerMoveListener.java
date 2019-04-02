@@ -20,6 +20,9 @@
 
 package me.iiSnipez.CombatLog.Listeners;
 
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.protection.flags.Flags;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -28,15 +31,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-import com.massivecraft.factions.Board;
-import com.massivecraft.factions.FLocation;
-import com.massivecraft.factions.entity.BoardColl;
-import com.massivecraft.factions.entity.Faction;
-import com.massivecraft.factions.entity.FactionColl;
-import com.massivecraft.massivecore.ps.PS;
-import com.sk89q.worldguard.bukkit.WGBukkit;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
-import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 
 import me.iiSnipez.CombatLog.CombatLog;
@@ -46,7 +41,6 @@ import me.iiSnipez.CombatLog.Events.PlayerUntagEvent.UntagCause;
 public class PlayerMoveListener implements Listener {
 
 	CombatLog plugin;
-	Faction factionIn;
 
 	public PlayerMoveListener(CombatLog plugin) {
 		this.plugin = plugin;
@@ -58,22 +52,9 @@ public class PlayerMoveListener implements Listener {
 		Location l = player.getLocation();
 				
 		if (plugin.taggedPlayers.containsKey(player.getName())) {
-			if (plugin.usesFactions && plugin.removeTagInSafeZone) {
-				if (plugin.useNewFactions) {
-					factionIn = BoardColl.get().getFactionAt(PS.valueOf(l));
-					if (factionIn.equals(FactionColl.get().getSafezone())) {
-						PlayerUntagEvent event1 = new PlayerUntagEvent(player, UntagCause.SAFE_AREA);
-						Bukkit.getServer().getPluginManager().callEvent(event1);
-						return;
-					}
-				} else if (plugin.useLegacyFactions && Board.getInstance().getFactionAt(new FLocation(l)).isSafeZone()) {
-					PlayerUntagEvent event1 = new PlayerUntagEvent(player, UntagCause.SAFE_AREA);
-					Bukkit.getServer().getPluginManager().callEvent(event1);
-				}
-			}
 			if(plugin.usesWorldGuard && plugin.removeTagInPvPDisabledArea) {
-				ApplicableRegionSet ars = WGBukkit.getPlugin().getRegionManager(player.getWorld()).getApplicableRegions(player.getLocation());
-				if(ars.queryState(null, DefaultFlag.PVP) == StateFlag.State.DENY) {
+				ApplicableRegionSet ars = WorldGuard.getInstance().getPlatform().getRegionContainer().get(BukkitAdapter.adapt(player.getWorld())).getApplicableRegions(BukkitAdapter.asBlockVector(player.getLocation()));
+				if(ars.queryState(null, Flags.PVP) == StateFlag.State.DENY) {
 					PlayerUntagEvent event1 = new PlayerUntagEvent(player, UntagCause.SAFE_AREA);
 					Bukkit.getServer().getPluginManager().callEvent(event1);
 				}
