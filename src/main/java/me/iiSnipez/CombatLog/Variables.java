@@ -144,7 +144,7 @@ public class Variables {
 		} else {
 			plugin.killMessageEnabled = false;
 		}
-		if (Bukkit.getVersion().contains("1.12")) {
+		if (Bukkit.getVersion().contains("1.12") || Bukkit.getVersion().contains("1.13")) {
 			plugin.newActionBar = true;
 		} else {
 			plugin.newActionBar = false;
