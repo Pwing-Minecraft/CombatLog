@@ -33,6 +33,8 @@ import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -65,7 +67,6 @@ public class CombatLog extends JavaPlugin {
 	public PluginFile clConfig;
 	public CommandExec commandExec;
 	public Variables vars;
-	public ActionBar aBar;
 	public BStatsMetrics bsm;
 	public WorldGuardPlugin wg;
 	public de.robingrether.idisguise.api.DisguiseAPI dAPI;
@@ -131,9 +132,7 @@ public class CombatLog extends JavaPlugin {
 	public ArrayList<String> killPlayers = new ArrayList<String>();
 	public boolean useNewFactions = false;
 	public boolean useLegacyFactions = false;
-	public String nmserver;
-	public boolean newActionBar = false;
-	
+
 	public int combatlogs;
 
 	public void onEnable() {
@@ -224,13 +223,8 @@ public class CombatLog extends JavaPlugin {
 					Map.Entry<String, Long> c = iter.next();
 					Player player = getServer().getPlayer(c.getKey());
 					if (useActionBar) {
-						if (newActionBar) {
-							aBar.sendActionBarNew(player, "" + "" + actionBarInCombatMessage.replaceAll("<time>",
-									"" + tagTimeRemaining(player.getName())));
-						} else {
-							aBar.sendActionBarOld(player, "" + "" + actionBarInCombatMessage.replaceAll("<time>",
-									"" + tagTimeRemaining(player.getName())));
-						}
+						player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(actionBarInCombatMessage.replaceAll("<time>",
+									"" + tagTimeRemaining(player.getName()))));
 					}
 					if (getCurrentTime() - (long) c.getValue().longValue() >= tagDuration) {
 						iter.remove();
@@ -310,8 +304,6 @@ public class CombatLog extends JavaPlugin {
 		updater = new Updater(this);
 		commandExec = new CommandExec(this);
 		vars = new Variables(this);
-		aBar = new ActionBar(this);
-		aBar.getBukkitVersion();
 		if (usesiDisguise) {
 			dAPI = vars.initDis();
 		}

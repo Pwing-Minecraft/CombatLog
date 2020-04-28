@@ -20,6 +20,8 @@
 
 package me.iiSnipez.CombatLog.Listeners;
 
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -43,11 +45,7 @@ public class PlayerUntagListener implements Listener {
 		String name = event.getPlayer().getName();
 		if (event.getCause().equals(UntagCause.TIME_EXPIRE)) {
 			if (plugin.useActionBar) {
-				if (plugin.newActionBar) {
-					plugin.aBar.sendActionBarNew(player, "" + plugin.actionBarUntagMessage);
-				} else {
-					plugin.aBar.sendActionBarOld(player, "" + plugin.actionBarUntagMessage);
-				}
+				player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(plugin.actionBarUntagMessage));
 			}
 			if (plugin.untagMessageEnabled) {
 				player.sendMessage(plugin.translateText(plugin.untagMessage));
@@ -69,11 +67,7 @@ public class PlayerUntagListener implements Listener {
 				player.sendMessage(plugin.translateText(plugin.untagMessage));
 			}
 			if (plugin.useActionBar) {
-				if (plugin.newActionBar) {
-					plugin.aBar.sendActionBarNew(player, "" + plugin.actionBarUntagMessage);
-				} else {
-					plugin.aBar.sendActionBarOld(player, "" + plugin.actionBarUntagMessage);
-				}
+				player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(plugin.actionBarUntagMessage));
 			}
 			plugin.taggedPlayers.remove(name);
 		}

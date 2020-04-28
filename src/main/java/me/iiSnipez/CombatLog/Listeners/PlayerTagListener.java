@@ -20,6 +20,8 @@
 
 package me.iiSnipez.CombatLog.Listeners;
 
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -61,13 +63,8 @@ public class PlayerTagListener implements Listener {
 									plugin.taggerMessage.replaceAll("<name>", ((Player) damagee).getName())));
 						}
 						if (plugin.useActionBar) {
-							if (plugin.newActionBar) {
-								plugin.aBar.sendActionBarNew(p, "" + plugin.actionBarInCombatMessage
-										.replaceAll("<time>", "" + plugin.tagTimeRemaining(p.getName())));
-							} else {
-								plugin.aBar.sendActionBarOld(p, "" + plugin.actionBarInCombatMessage
-										.replaceAll("<time>", "" + plugin.tagTimeRemaining(p.getName())));
-							}
+							p.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(plugin.actionBarInCombatMessage
+										.replaceAll("<time>", "" + plugin.tagTimeRemaining(p.getName()))));
 						}
 						if (plugin.usesLibsDisguise && plugin.removeDisguiseEnabled)
 							plugin.removeDisguise(p);
@@ -105,16 +102,11 @@ public class PlayerTagListener implements Listener {
 						plugin.taggedPlayers.put(p.getName(), plugin.getCurrentTime());
 						if (plugin.taggedMessageEnabled) {
 							p.sendMessage(plugin.translateText(
-									plugin.taggedMessage.replaceAll("<name>", ((Player) damager).getName())));
+									plugin.taggedMessage.replaceAll("<name>", damager.getName())));
 						}
 						if (plugin.useActionBar) {
-							if (plugin.newActionBar) {
-								plugin.aBar.sendActionBarNew(p, "" + plugin.actionBarInCombatMessage
-										.replaceAll("<time>", "" + plugin.tagTimeRemaining(p.getName())));
-							} else {
-								plugin.aBar.sendActionBarOld(p, "" + plugin.actionBarInCombatMessage
-										.replaceAll("<time>", "" + plugin.tagTimeRemaining(p.getName())));
-							}
+							p.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(plugin.actionBarInCombatMessage
+										.replaceAll("<time>", "" + plugin.tagTimeRemaining(p.getName()))));
 						}
 						if (plugin.usesLibsDisguise && plugin.removeDisguiseEnabled)
 							plugin.removeDisguise(p);

@@ -139,16 +139,7 @@ public class Variables {
 			plugin.blockTeleportationMessageEnabled = false;
 		}
 		plugin.killMessage = plugin.clConfig.getCLConfig().getString("KillMessage");
-		if (!plugin.killMessage.equalsIgnoreCase("false")) {
-			plugin.killMessageEnabled = true;
-		} else {
-			plugin.killMessageEnabled = false;
-		}
-		if (Bukkit.getVersion().contains("1.12") || Bukkit.getVersion().contains("1.13")) {
-			plugin.newActionBar = true;
-		} else {
-			plugin.newActionBar = false;
-		}
+		plugin.killMessageEnabled = !plugin.killMessage.equalsIgnoreCase("false");
 	}
 	
 	public DisguiseAPI initDis() {
